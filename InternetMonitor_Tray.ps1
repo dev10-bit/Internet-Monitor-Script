@@ -13,7 +13,7 @@ $notifyIcon.Text = "Internet Monitor"
 
 # Set initial states
 $InternetWasOnline = $true
-$LastStatusTime = Get-Date
+$LastStatusTime = (Get-Date).AddMinutes(-60)  # <-- Pretend last popup was 60 minutes ago
 
 # Exit menu
 $exitMenuItem = New-Object System.Windows.Forms.MenuItem "Exit"
@@ -23,7 +23,7 @@ $exitMenuItem.add_Click({
     Stop-Process -Id $PID
 })
 
-# Tray menu
+# Attach context menu to tray icon
 $contextMenu = New-Object System.Windows.Forms.ContextMenu
 $contextMenu.MenuItems.Add($exitMenuItem)
 $notifyIcon.ContextMenu = $contextMenu
@@ -50,7 +50,7 @@ $timer.Add_Tick({
         # Show "Internet OK" popup once per hour
         if (($Now - $LastStatusTime).TotalMinutes -ge 60) {
             $notifyIcon.ShowBalloonTip(3000, "Internet Status", "Internet is OK as of $TimeStamp", [System.Windows.Forms.ToolTipIcon]::Info)
-            $LastStatusTime = $Now
+            $LastStatusTime = $Now  # Reset 1-hour timer after popup
         }
 
         $InternetWasOnline = $true
@@ -63,7 +63,7 @@ $timer.Add_Tick({
         }
 
         $InternetWasOnline = $false
-        $LastStatusTime = $Now
+        $LastStatusTime = $Now  # Reset timer after loss
     }
 
     Add-Content -Path $LogPath -Value $Message
@@ -72,4 +72,3 @@ $timer.Add_Tick({
 # Start timer and run message loop
 $timer.Start()
 [System.Windows.Forms.Application]::Run()
-
