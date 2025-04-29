@@ -1,57 +1,67 @@
 # Internet-Monitor-Script
 A PowerShell script that monitors internet connectivity and displays tray notifications. 
+
 # Internet Connectivity Monitor (PowerShell)
 
-This is a lightweight PowerShell script that monitors your internet connection in real time and alerts you via system tray notifications when your connection is lost or restored. It also logs all events to a `.txt` file with timestamps.
+A lightweight PowerShell tool that monitors your internet connection, displays tray notifications, and logs all events — fully automated at Windows startup via Task Scheduler.
 
 ## 🚀 Features
 
-- ✅ Real-time internet status monitoring
-- ✅ System tray icon with balloon notifications
-- ✅ Logs connection events to `InternetConnectionLog.txt`
-- ✅ Tray icon includes a right-click **Exit** option
-- ✅ Starts automatically with Windows via Task Scheduler
+- ✅ Real-time internet connection monitoring
+- ✅ Tray icon with right-click Exit menu
+- ✅ Pop-up notifications for:
+  - Internet Lost
+  - Internet Restored
+  - Internet OK (shown once every 60 minutes)
+- ✅ Background logging to `InternetConnectionLog.txt`
+- ✅ Automatically launches at login with Task Scheduler
 - ✅ Designed for Windows 10/11
 
 ## 🧠 How It Works
 
-- Uses `Test-Connection` to ping `google.com` every 5 seconds.
-- Detects internet loss, restoration, and status changes.
-- Shows pop-up notifications using `System.Windows.Forms`.
-- Keeps a timestamped log of all internet status changes.
-- Runs silently in the background at every user login.
+- Checks internet connectivity by pinging `google.com` every 5 seconds.
+- Displays:
+  - Immediate alert if the internet is lost or restored.
+  - "Internet OK" reminder every 60 minutes if connection is stable.
+- Writes every status event to a timestamped `.txt` log file.
+- Runs silently in the background with a tray icon.
+- Allows clean exit by right-clicking the tray icon and selecting **Exit**.
 
 ## 🔧 Requirements
 
 - Windows 10 or Windows 11
-- PowerShell 5.1 or later (built-in on most systems)
-- Internet access (obviously!)
+- PowerShell 5.1 or later
+- Basic Task Scheduler setup (one-time)
 
-## 📁 Files
+## 📁 Project Structure
 
 | File | Purpose |
 |------|---------|
 | `InternetMonitor_Tray.ps1` | Main PowerShell script |
-| `InternetConnectionLog.txt` | Auto-generated log file (excluded via `.gitignore`) |
-| `.gitignore` | Keeps logs and system files out of the repo |
+| `.gitignore` | Excludes logs and temp files |
+| `InternetConnectionLog.txt` | Auto-generated log file (ignored in Git) |
+| `LICENSE` | MIT License |
 
-## 📦 Installation / Setup
+## 🛠️ Installation & Setup
 
-1. Place `InternetMonitor_Tray.ps1` inside a permanent folder (e.g., `C:\Scripts\`).
+1. Save the `InternetMonitor_Tray.ps1` script to a permanent location (e.g., `C:\Scripts\`).
 2. Open **Task Scheduler** → Create a new task:
    - **Trigger:** At log on
-   - **Action:** `powershell.exe`
-   - **Arguments:**
+   - **Action:** Start `powershell.exe`
+   - **Arguments:**  
      ```
      -WindowStyle Hidden -ExecutionPolicy Bypass -File "C:\Scripts\InternetMonitor_Tray.ps1"
      ```
-   - **Run only when user is logged on**
-   - **Run with highest privileges**
-3. Done! The script will now auto-run at each login.
+   - **Settings:**  
+     - Run only when user is logged on
+     - Run with highest privileges
+3. Restart or log off/on to test.
+
+✅ The system tray icon will appear automatically, and background monitoring will begin.
 
 ## 📝 License
 
-This project is licensed under the **MIT License** — feel free to use or adapt it with attribution.
+Licensed under the **MIT License** — free to use, modify, and distribute with attribution.
 
 ---
 
