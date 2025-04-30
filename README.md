@@ -1,68 +1,96 @@
-# Internet-Monitor-Script
-A PowerShell script that monitors internet connectivity and displays tray notifications. 
-
 # Internet Connectivity Monitor (PowerShell)
 
-A lightweight PowerShell tool that monitors your internet connection, displays tray notifications, and logs all events — fully automated at Windows startup via Task Scheduler.
+A lightweight, automated PowerShell tool that monitors your internet connection in real-time. It logs each status update to a file and displays tray notifications when your internet drops, is restored, or is confirmed stable. Runs silently at startup using Task Scheduler.
+
+---
 
 ## 🚀 Features
 
-- ✅ Real-time internet connection monitoring
-- ✅ Tray icon with right-click Exit menu
-- ✅ Pop-up notifications for:
-  - Internet Lost
-  - Internet Restored
-  - Internet OK (shown once every 60 minutes)
-- ✅ Background logging to `InternetConnectionLog.txt`
-- ✅ Automatically launches at login with Task Scheduler
-- ✅ Designed for Windows 10/11
+- ✅ Logs internet connection status every 60 seconds
+- ✅ System tray notifications:
+  - 🔴 Internet Connection Lost
+  - 🟢 Internet Restored
+  - ℹ️ Internet OK (every 60 minutes while connected)
+- ✅ Persistent logging to `C:\Scripts\InternetConnectionLog.txt`
+- ✅ Silent tray app with clean exit via right-click
+- ✅ Compatible with Windows 10 and 11
+- ✅ Launches automatically at logon via Task Scheduler
 
-## 🧠 How It Works
+---
 
-- Checks internet connectivity by pinging `google.com` every 5 seconds.
-- Displays:
-  - Immediate alert if the internet is lost or restored.
-  - "Internet OK" reminder every 60 minutes if connection is stable.
-- Writes every status event to a timestamped `.txt` log file.
-- Runs silently in the background with a tray icon.
-- Allows clean exit by right-clicking the tray icon and selecting **Exit**.
+## 🛠️ Setup Instructions
 
-## 🔧 Requirements
+### 1. Save the script
 
-- Windows 10 or Windows 11
-- PowerShell 5.1 or later
-- Basic Task Scheduler setup (one-time)
+- Create a folder: `C:\Scripts`
+- Save `InternetMonitor_Tray.ps1` inside that folder
 
-## 📁 Project Structure
+### 2. (Optional) View the log file
 
-| File | Purpose |
-|------|---------|
+> `C:\Scripts\InternetConnectionLog.txt`  
+Each log entry includes a timestamp and status message.
+
+### 3. Create a Task Scheduler job (runs at startup)
+
+- Open **Task Scheduler**
+- Create a new task with these settings:
+
+#### General
+- Name: `Internet Monitor`
+- ✅ Run only when user is logged on
+- ✅ Run with highest privileges
+
+#### Triggers
+- At log on
+
+#### Actions
+- Program/script:  
+  `powershell.exe`
+
+- Add arguments:  
+-WindowStyle Hidden -ExecutionPolicy Bypass -File "C:\Scripts\InternetMonitor_Tray.ps1"
+
+#### Conditions
+- Uncheck all
+
+#### Settings
+- ✅ Allow task to be run on demand
+- ❌ Do not stop if runs too long
+- ✅ Restart task on failure (1 minute, 3 attempts)
+
+---
+
+## 📁 Repository Contents
+
+| File | Description |
+|------|-------------|
 | `InternetMonitor_Tray.ps1` | Main PowerShell script |
-| `.gitignore` | Excludes logs and temp files |
-| `InternetConnectionLog.txt` | Auto-generated log file (ignored in Git) |
-| `LICENSE` | MIT License |
+| `README.md` | Setup instructions and feature summary |
+| `.gitignore` | Excludes log file from Git tracking |
 
-## 🛠️ Installation & Setup
+---
 
-1. Save the `InternetMonitor_Tray.ps1` script to a permanent location (e.g., `C:\Scripts\`).
-2. Open **Task Scheduler** → Create a new task:
-   - **Trigger:** At log on
-   - **Action:** Start `powershell.exe`
-   - **Arguments:**  
-     ```
-     -WindowStyle Hidden -ExecutionPolicy Bypass -File "C:\Scripts\InternetMonitor_Tray.ps1"
-     ```
-   - **Settings:**  
-     - Run only when user is logged on
-     - Run with highest privileges
-3. Restart or log off/on to test.
+## 📌 Usage Notes
 
-✅ The system tray icon will appear automatically, and background monitoring will begin.
+- Runs silently in the background — tray icon appears on logon
+- Notifies you only when needed (restored, lost, or hourly confirmation)
+- Efficient 60-second check rate for minimal system impact
+- Cleanly exits from system tray via right-click → **Exit**
+
+---
+
+## 🔒 Permissions Required
+
+- Administrator access is required to create a Task Scheduler task with elevated privileges
+- No changes to firewall or system security settings are made
+
+---
 
 ## 📝 License
 
-Licensed under the **MIT License** — free to use, modify, and distribute with attribution.
+MIT License — you are free to use, modify, and share this script with attribution.
 
 ---
 
 Created by [dev10-bit](https://github.com/dev10-bit)
+
